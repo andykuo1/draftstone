@@ -1,7 +1,6 @@
 import Shader from 'mogli/Shader.js';
 import BufferObject from 'mogli/BufferObject.js';
 import PerspectiveCamera from 'mogli/PerspectiveCamera.js';
-import ChunkManager from 'tilemap/ChunkManager.js';
 import Mesh from 'mogli/Mesh.js';
 import { mat4 } from 'gl-matrix';
 
@@ -108,10 +107,6 @@ class Renderer
 
     this.camera = new PerspectiveCamera(gl);
     this.camera.position[2] = -6;
-
-    this.chunkManager = new ChunkManager();
-
-    this.chunkMesh = this.chunkManager.getChunk(0, 0);
   }
 
   terminate(gl)
