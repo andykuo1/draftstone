@@ -189,7 +189,7 @@ self.addEventListener('fetch', event => {
       event.respondWith(fetch(request)
         .then(response => addToCache(cacheKey, request, response))
         .catch(() => fetchFromCache(event))
-        .catch(() => opts.getOfflineResponse(responseType))
+        .catch(() => opts.getOfflineResponse(resourceType))
       );
     }
     //Other files rely on cached files FIRST
@@ -199,7 +199,7 @@ self.addEventListener('fetch', event => {
       event.respondWith(fetchFromCache(event)
         .catch(() => fetch(request))
         .then(response => addToCache(cacheKey, request, response))
-        .catch(() => opts.getOfflineResponse(responseType))
+        .catch(() => opts.getOfflineResponse(resourceType))
       );
     }
   }
