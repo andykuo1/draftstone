@@ -37,24 +37,26 @@ const CONFIG = {
     //TODO: this should work, but it doesn't. Probably server settings.
     if (url.pathname.endsWith(".html") || acceptHeader.indexOf('text/html') !== -1)
     {
-      resourceType = 'content';
+      return 'content';
     }
     else if (acceptHeader.indexOf('image') !== -1)
     {
-      resourceType = 'image';
+      return 'image';
     }
     else if (url.pathname.endsWith(".js"))
     {
-      resourceType = 'js';
+      return 'js';
     }
     else if (url.pathname.endsWith(".lang"))
     {
-      resourceType = 'lang';
+      return 'lang';
     }
     else// if (...)
     {
       //Filter by other resource types...
     }
+
+    return undefined;
   },
   getOfflineResponse(resourceType)
   {
@@ -108,24 +110,6 @@ function fetchFromCache(event)
       }
       return response;
     });
-}
-
-function offlineResponse(request, opts)
-{
-  if (resourceType === 'content')
-  {
-    return caches.match(opts.offlinePage);
-  }
-  else if (responseType === 'image')
-  {
-    return caches.match(opts.offlineImage);
-  }
-  else// if (responseType === ...)
-  {
-    //Handle any other resources that have offline versions...
-  }
-
-  return undefined;
 }
 
 //Pre-cache static resources for offline use...

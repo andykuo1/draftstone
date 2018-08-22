@@ -3,7 +3,7 @@ const I18N = {
   languageMapping: new Map(),
   fetchLanguageFile(langCode, callback=null)
   {
-    console.log("Fetching language file \'" + langCode + "\'...");
+    console.log("[I18N] Fetching language file \'" + langCode + "\'...");
     const request = new XMLHttpRequest();
     request.onreadystatechange = function() {
       if (request.readyState === 4/* READY */ &&
@@ -16,14 +16,14 @@ const I18N = {
         }
         else
         {
-          console.log("Loading language file \'" + langCode + "\'...");
+          console.log("[I18N] Loading language file \'" + langCode + "\'...");
           I18N.loadLanguageFile(result);
-          console.log("Language file \'" + langCode + "\' loaded.");
+          console.log("[I18N] Language file \'" + langCode + "\' loaded.");
         }
       }
     };
     request.onerror = function() {
-      console.log("Unable to find language file for \'" + langCode + "\'.");
+      console.log("[I18N] Unable to find language file for \'" + langCode + "\'.");
     };
     request.open("GET", this.baseUrl + langCode + ".lang", true);
     request.setRequestHeader("Content-Type", "text/strings");
@@ -43,7 +43,7 @@ const I18N = {
       if (line.startsWith("//")) continue;
       if (line.startsWith("//TODO:"))
       {
-        console.log("Warning - found incomplete lang file: " + line.substring("//".length).trim());
+        console.log("[I18N] Warning - found incomplete lang file: " + line.substring("//".length).trim());
       }
 
       separator = line.indexOf('=');

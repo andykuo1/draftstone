@@ -3,20 +3,26 @@ import ReactDOM from 'react-dom';
 
 import App from './App.js';
 
+const SHOULD_WARN_USERS_ON_EXIT = false;
+
 //Setup viewport
 window.addEventListener('load', (event) => {
   loadApplication();
   window.requestAnimationFrame(updateApplication);
 });
+
 //Warn user before exit
 window.addEventListener('beforeunload', (event) => {
-  const message = I18N.toString("alert.window.exit");
-  event = event || window.event;
-  // For IE and Firefox
-  if (event) event.returnValue = message;
+  if (SHOULD_WARN_USERS_ON_EXIT)
+  {
+    const message = I18N.toString("alert.window.exit");
+    event = event || window.event;
+    // For IE and Firefox
+    if (event) event.returnValue = message;
 
-  //For Safari
-  return message;
+    //For Safari
+    return message;
+  }
 });
 
 //Setup application
@@ -36,8 +42,7 @@ function updateApplication(time)
 {
   dt = (time - prevtime) / FRAMES_PER_SECOND;
   {
-    const page = App;
-    ReactDOM.render(React.createElement(page), root);
+    ReactDOM.render(React.createElement(App), root);
   }
   prevtime = time;
   window.requestAnimationFrame(updateApplication);
