@@ -85,9 +85,15 @@ class MapRenderer
     }
   }
 
-  render(ctx, tilemap)
+  renderChunk(ctx, chunk)
   {
-    for(let i = 0; i < CHUNK_SIZE; ++i)
+    ctx.save();
+    ctx.translate(chunk.chunkCoordX * CHUNK_SIZE * TILE_SIZE, chunk.chunkCoordY * CHUNK_SIZE * TILE_SIZE);
+
+    const WALL_SIZE = Math.floor((TILE_SIZE * 2) / 3);
+    const SHADOW_SIZE = Math.floor((WALL_SIZE * 2) / 3);
+
+    for(let i = 1; i < CHUNK_SIZE; ++i)
     {
       ctx.beginPath();
       ctx.moveTo(i * TILE_SIZE, 0);
@@ -97,22 +103,34 @@ class MapRenderer
       ctx.stroke();
     }
 
-    ctx.save();
-    ctx.fillStyle = "black";
-    this.renderMapLayer(ctx, tilemap, BORDER_SOUTH);
-    ctx.restore();
+    ctx.fillStyle = "lightgray";
+    ctx.translate(SHADOW_SIZE, 0);
+    this.renderMapLayer(ctx, chunk, BORDER_EAST);
+    ctx.translate(-SHADOW_SIZE, 0);
 
-    ctx.save();
+    ctx.fillStyle = "black";
+    this.renderMapLayer(ctx, chunk, BORDER_SOUTH);
+
+    /*
     ctx.filter = "blur(4px)";
     ctx.fillStyle = "black";
     this.renderMapLayer(ctx, tilemap, BORDER_ALL);
-    ctx.restore();
+    */
 
-    ctx.save();
     ctx.fillStyle = "gold";
-    ctx.translate(0, -6);
-    this.renderMapLayer(ctx, tilemap);
+    ctx.translate(0, -WALL_SIZE);
+    this.renderMapLayer(ctx, chunk);
+    ctx.translate(0, WALL_SIZE);
+
     ctx.restore();
+  }
+
+  render(ctx, chunks)
+  {
+    for(let chunk of chunks)
+    {
+      this.renderChunk(ctx, chunk);
+    }
   }
 }
 

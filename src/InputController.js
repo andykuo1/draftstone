@@ -7,7 +7,9 @@ class InputController
     this.pointer = {
       x: 0,
       y: 0,
-      down: false
+      down: false,
+      _mouseup: false,
+      _mousemove: false
     };
 
     this.onMouseDown = this.onMouseDown.bind(this);
@@ -19,16 +21,24 @@ class InputController
   {
     this.canvas = app.canvas;
 
-    document.addEventListener('mousedown', this.onMouseDown);
-    document.addEventListener('mouseup', this.onMouseUp);
-    document.addEventListener('mousemove', this.onMouseMove);
+    this.canvas.addEventListener('mousedown', this.onMouseDown);
   }
 
   destroy()
   {
-    document.removeEventListener('mousedown', this.onMouseDown);
-    document.removeEventListener('mouseup', this.onMouseUp);
-    document.removeEventListener('mousemove', this.onMouseMove);
+    this.canvas.removeEventListener('mousedown', this.onMouseDown);
+
+    //Make sure it does not exist
+    if (this.pointer._mouseup)
+    {
+      document.removeEventListener('mouseup', this.onMouseUp);
+      this.pointer_mouseup = false;
+    }
+    if (this.pointer._mousemove)
+    {
+      document.removeEventListener('mousemove', this.onMouseMove);
+      this.pointer._mousemove = false;
+    }
 
     this.canvas = null;
   }
@@ -41,11 +51,43 @@ class InputController
   onMouseDown(e)
   {
     this.pointer.down = true;
+
+    let rect = this.canvas.getBoundingClientRect();
+    this.pointer.x = e.clientX - rect.left;
+    this.pointer.y = e.clientY - rect.top;
+
+    //Make sure it does not exist
+    if (this.pointer._mouseup)
+    {
+      document.removeEventListener('mouseup', this.onMouseUp);
+      this.pointer._mouseup = false;
+    }
+    if (this.pointer._mousemove)
+    {
+      document.removeEventListener('mousemove', this.onMouseMove);
+      this.pointer._mousemove = false;
+    }
+
+    this.pointer._mouseup = true;
+    document.addEventListener('mouseup', this.onMouseUp);
+    this.pointer._mousemove = true;
+    document.addEventListener('mousemove', this.onMouseMove);
   }
 
   onMouseUp(e)
   {
     this.pointer.down = false;
+
+    if (this.pointer._mouseup)
+    {
+      document.removeEventListener('mouseup', this.onMouseUp);
+      this.pointer._mouseup = false;
+    }
+    if (this.pointer._mousemove)
+    {
+      document.removeEventListener('mousemove', this.onMouseMove);
+      this.pointer._mousemove = false;
+    }
   }
 
   onMouseMove(e)

@@ -1,0 +1,13 @@
+.toolbar-container {
+  display: flex;
+  flex-direction: column;
+
+  width: var(--toolbar-size);
+  height: 100%;
+
+  pointer-events: auto;
+}
+
+.toolbar-container > button {
+  cursor: pointer;
+}

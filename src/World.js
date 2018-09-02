@@ -1,5 +1,5 @@
-import TileMap from 'TileMap.js';
-import { TILE_SIZE } from 'TileMap.js';
+import ChunkManager from 'ChunkManager.js';
+import { TILE_SIZE } from 'Chunk.js';
 
 import Tile from 'Tile.js';
 import TileRegistry from 'TileRegistry.js';
@@ -16,7 +16,9 @@ class World
 
     this.inputController = null;
 
-    this.tileMap = new TileMap();
+    this.tileMode = "add";
+
+    this.chunkManager = new ChunkManager();
     this.mapRenderer = new MapRenderer();
   }
 
@@ -43,18 +45,28 @@ class World
     //Clear previous screen buffer
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+    ctx.save();
+    ctx.lineWidth = 8;
+    ctx.strokeRect(0, 0, this.canvas.width, this.canvas.height);
+    ctx.restore();
+
     const pointer = this.inputController.getPointer();
-    ctx.fillRect(pointer.x, pointer.y, 10, 10);
+    //ctx.fillRect(pointer.x, pointer.y, 10, 10);
 
     if (pointer.down)
     {
-      const xx = Math.floor(pointer.x / TILE_SIZE);
-      const yy = Math.floor(pointer.y / TILE_SIZE);
-      this.tileMap.setTile(xx, yy, 1);
-      this.tileMap.update();
+      const cursor = this.chunkManager.getCursor();
+      const HALF_TILE = TILE_SIZE / 2;
+      cursor.setWorldPosition(pointer.x - HALF_TILE, pointer.y - HALF_TILE);
+      const tile = this.tileMode == "add" ? 1 : 0;
+      cursor.setTile(tile);
+      cursor.move(1, 0).setTile(tile).move(-1, 0);
+      cursor.move(0, 1).setTile(tile).move(0, -1);
+      cursor.move(1, 1).setTile(tile).move(-1, -1);
     }
 
-    this.mapRenderer.render(ctx, this.tileMap);
+    this.chunkManager.update();
+    this.mapRenderer.render(ctx, this.chunkManager.chunks.values());
   }
 }
 
