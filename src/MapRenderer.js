@@ -2,7 +2,7 @@ import TileRegistry from 'TileRegistry.js';
 import { TILE_SIZE, CHUNK_SIZE,
   BORDER_NORTH, BORDER_WEST,
   BORDER_SOUTH, BORDER_EAST,
-  BORDER_ALL } from 'TileMap.js';
+  BORDER_ALL } from 'Chunk.js';
 
 class MapRenderer
 {
